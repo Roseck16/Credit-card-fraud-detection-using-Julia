@@ -5,7 +5,8 @@ import Statistics: mean
 import BSON: @save, @load
 
 const file = "dataset/train_data.csv"
-const data_size = 227846
+const data_size = 284807
+const data_size_train = 227846
 batch_size = 2048
 
 last_epoch = 1
@@ -14,33 +15,20 @@ last_batch = 0
 include("utils.jl")
 include("datapreprocessing.jl")
 
-function extract_num(array)
-    data = []
-    for arr in array
-        for num in arr
-            push!(data, num)
-        end
-    end
-    return data
-end
-
 model = Chain(
         Dense(29, 64, relu),
         Dropout(0.5),
         Dense(64, 1, sigmoid)
 ) |> gpu
-#=
-x_test, y_test = load_data(file, batch_size, 2)
 
+x_test, y_test = load_data(file, 10, 2)
+#=
 x_test_copy = reduce(hcat, x_test)
 
 y_pred_test = reshape(model(x_test_copy), :,1)
 
 data_test = (x_test_copy, y_test)
 =#
-function loss(x, y)
-    sum(binarycrossentropy.(reshape(model(x),:,1), y))
-end
 
 function loss_function(x, y)
     if y != 0
@@ -70,12 +58,12 @@ function accuracy(x, y, _model)
     custom_auc(fpr, tpr)
 end
 
-opt = ADAM(0.0001)
+opt = ADAMW(0.00001)
 ps = Flux.params(model)
 worst_loss = 50000
 
 function train(epochs::Int64, last_epoch::Int64, file::String, batch_size::Int64, last_batch::Int64)
-    batches = round(Int64, ((data_size)/2)/batch_size)
+    batches = round(Int64, data_size_train/batch_size)
     _last_epoch = last_epoch
     _last_batch = last_batch
     _step = 1
@@ -85,7 +73,7 @@ function train(epochs::Int64, last_epoch::Int64, file::String, batch_size::Int64
         batch = _last_batch
         place = (batch*batch_size) + 2
 
-        for i in place:batch_size:round(Int64, data_size/2)
+        for i = place:batch_size:data_size_train
             batch += 1
             x, y = load_data(file, batch_size, i)
 

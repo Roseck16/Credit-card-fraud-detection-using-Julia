@@ -82,6 +82,7 @@ function load_data(path, batch_size, start; _shuffle=true)
     return gpu(gpu.(x)), gpu(gpu.(y))
 end
 ```
+Notice how when parsing the column Amount I apply the fuction Log and sum a little quantity. This is done because that column has a range much greater than the other 28 columns, and the log fuction reduces that number. I add 0.0001 to never  have a zero or NaN Amount.
 
 The important method of this function is CSV.Rows, which reads a CSV file row by row rather than the entire file. The arguments *batch_size* and *start* determine how many rows will be read and from which one. These are important as they will help pipelinening the training. The fuction ```string_to_number(rows)``` is a simple handling function that takes arrays with string elements as input and returns an array of numbers: 
 
@@ -98,3 +99,19 @@ function string_to_number(x::AbstractArray)
     return placeholder
 end
 ```
+The package CuArrays is used to move the arrays containing the data to the gpu, for a much more faster training.
+
+## Creating the model
+
+The model will only have two Dense layers and a Dropout layer, since the dataset is already normalized.
+
+```
+model = Chain(
+        Dense(29, 64, relu),
+        Dropout(0.5),
+        Dense(64, 1, sigmoid)
+) |> gpu
+```
+
+With the wraper function |> gpu the model is moved to the gpu.
+

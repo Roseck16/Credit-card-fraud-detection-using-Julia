@@ -124,7 +124,7 @@ opt = Flux.Optimiser(InvDecay(), ADAM())
 ## Evaluating the model
 
 Since the dataset is imbalanced, we need to use an accuracy metric different than a confuse matrix. AUC is a good metric. The file utils.jl provides several methods to use this metric, using simple input arrays of zeros and ones.
-After only 23 batches, training with a batch size of 2048, to ensure that every batch has at least one positive label, the accuracy reached with the test set is of 0.9953 or 99.53%. The next two plots show the loss and the accuracy during the training.
+After only 23 batches, training with a batch size of 2048, to ensure that every batch has at least one positive label, the accuracy reached with the test set is of 0.9953 or **99.53%**. The next two plots show the loss and the accuracy during the training.
 
 ![Total loss for the batch at time_step.](/plots/loss_plot.png)
 ![Total accuracy for the batch at time_step.](/plots/accuracy_plot.png)

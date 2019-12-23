@@ -58,7 +58,7 @@ function accuracy(x, y, _model)
     custom_auc(fpr, tpr)
 end
 
-opt = ADAMW(0.00001)
+opt = Flux.Optimiser(InvDecay(), ADAM())
 ps = Flux.params(model)
 worst_loss = 50000
 

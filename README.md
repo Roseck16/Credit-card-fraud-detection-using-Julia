@@ -122,5 +122,3 @@ Training several times, we see that the weigths quickly decay to NaN. Because of
 Since the dataset is imbalanced, we need to use an accuracy metric different than a confuse matrix. AUC is a good metric. The file utils.jl provides several methods to use this metric, using simple input arrays of zeros and ones.
 After 4 epochs, training with a batch size of 2048 to ensure that every batch has at least one positive label, the accuracy reached with the test set is of 0.911 or 91.1%. The next two plots show the loss and the accuracy during the training.
 
-![Total loss for the batch at time_step. Training during 5 epochs.](/plots/loss_plot.png)
-![Total accuracy for the batch at time_step. Training during 5 epochs.](/plots/accuracy_plot.png)

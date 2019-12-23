@@ -113,5 +113,12 @@ model = Chain(
 ) |> gpu
 ```
 
-With the wraper function |> gpu the model is moved to the gpu.
+With the wraper function ```|> gpu``` the model is moved to the gpu.
+
+Training several times, we see that the weigths quickly decay to NaN. Because of this the optimiser used will be [ADAMW](https://arxiv.org/abs/1711.05101) with a learning rate of 0.00001.
+
+## Evaluating the model
+
+Since the dataset is imbalanced, we need to use an accuracy metric different than a confuse matrix. AUC is a good metric. The file utils.jl provides several methods to use this metric, using simple input arrays of zeros and ones.
+After 4 epochs, training with a batch size of 2048 to ensure that every batch has at least one positive label, the accuracy reached with the test set is of 0.911 or 91.1%. The next two plots show the loss and the accuracy during the training.
 
